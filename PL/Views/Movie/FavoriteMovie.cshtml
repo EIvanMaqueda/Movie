@@ -1,0 +1,32 @@
+﻿@model PL.Models.Movie
+@{
+    ViewData["Title"] = "FavoriteMovie";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/Card.css" asp-append-version="true" />
+
+<div class="row row-cols-3">
+
+    @foreach (PL.Models.Movie movie in Model.Peliculas)
+    {
+        <div class="col-sm-4">
+            <figure class="image-block">
+                <h1></h1>
+                <img src="@movie.Foto" alt="" />
+                <figcaption>
+                    <h3>
+                        @movie.Nombre
+                    </h3>
+                    <p>@movie.Descripcion</p>
+                    <a class="btn btn-danger" href="@Url.Action("DeleteFavoriteMovie", "Movie", new { IdMovie = movie.IdMovie })">
+                        eliminar de favoritos
+                    </a>
+                </figcaption>
+            </figure>
+        </div>
+        <br>
+    }
+
+</div>
+
