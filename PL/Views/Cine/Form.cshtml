@@ -19,7 +19,7 @@
         <input type="text" class="form-control" id="txtLongitud" name="Longitud" value="@Model.Longitud" disabled>
     </div>
     <div class="col">
-        <label class="form-label">Descripcion</label>
+        <label class="form-label">Direccion</label>
         <input type="text" class="form-control" id="txtDescripcion" name="Descripcion" value="@Model.Descripcion">
     </div>
     <div class="col">
@@ -43,6 +43,8 @@
         var latit = document.getElementById("txtLatitud").value;
         var long =document.getElementById("txtLongitud").value;
         var uluru = { lat: 0, lng: 0 };
+        var location=0;
+        var pos=0;
         if(latit==""){
            uluru = { lat: 19.430073, lng: -99.162189 };
         }
@@ -56,24 +58,49 @@
             zoom: 14,
             center: uluru,
         });
-        const infowindow = new google.maps.InfoWindow({
-            content: "Latitud: " + uluru.lat+"\nLongitud: "+uluru.lng,
+        //latitud/longitud
+        let infoWindow = new google.maps.InfoWindow({
+            content: "Latitud: " + uluru.lat + "\nLongitud: " + uluru.lng,
             position: uluru,
         });
-        infowindow.open(map);
+
+        infoWindow.open(map);
+        // Configure the click listener.
+        map.addListener("click", (mapsMouseEvent) => {
+            // Close the current InfoWindow.
+            infoWindow.close();
+            // Create a new InfoWindow.
+            infoWindow = new google.maps.InfoWindow({
+                position: mapsMouseEvent.latLng,
+            });
+            infoWindow.setContent(
+                pos=JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2),
+            );
+            var parse = Object.values(JSON.parse(pos));
+            uluru = { lat: parse[0], lng: parse[1] };
+            document.getElementById("txtLatitud").value = uluru.lat;
+            document.getElementById("txtLongitud").value = uluru.lng;
+            infoWindow.open(map);
+        });
+    
+
 
         google.maps.event.addListener(map,'click',function(event){
-        var geo=new google.maps.Geocoder();
-        geo.geocode({
-                'address': inputAddress
-        },function(results,status){
+            var geocoder = new google.maps.Geocoder();
+ 
+            geocoder.geocode({
+                'latLng':event.latLng
+            }, function (results, status) {
         if(status==google.maps.GeocoderStatus.OK){
                     if (results[0]){
-                        document.getElementById("txtDescripcion").value(results[0].formatted_address);
+                        document.getElementById("txtDescripcion").value=results[0].formatted_address;
                     }
         }
         });
         });
+
+        
+
         document.getElementById("txtLatitud").value=uluru.lat;
         document.getElementById("txtLongitud").value = uluru.lng;
         // The marker, positioned at Uluru
