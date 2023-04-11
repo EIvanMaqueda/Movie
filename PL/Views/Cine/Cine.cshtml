@@ -47,8 +47,8 @@
                             <td>@cine.Venta</td>
                             <td class="d-none">@cine.Zona.IdZona</td>
                             <td>@cine.Zona.Nombre</td>
-                            <td class="text-center"><a class="btn btn-warning" href="@Url.Action("Form", "Aseguradora", new { IdCine = cine.IdCine })"><i class="bi bi-pencil-square"></i></a></td>
-                            <td class="text-center"><a class="btn btn-danger" href="@Url.Action("Delete", "Aseguradora", new { IdCine = cine.IdCine})" onclick="return confirm('Estas seguro que deseas eliminar este registro?');"><i class="bi bi-trash-fill"></i></a></td>
+                            <td class="text-center"><a class="btn btn-warning" href="@Url.Action("Form", "Cine", new { IdCine = cine.IdCine })"><i class="bi bi-pencil-square"></i></a></td>
+                            <td class="text-center"><a class="btn btn-danger" href="@Url.Action("Delete", "Cine", new { IdCine = cine.IdCine})" onclick="return confirm('Estas seguro que deseas eliminar este registro?');"><i class="bi bi-trash-fill"></i></a></td>
                         </tr>
                     }
                 </tbody>
