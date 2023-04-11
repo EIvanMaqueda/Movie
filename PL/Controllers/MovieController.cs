@@ -67,8 +67,8 @@ namespace Movie.Controllers
                 using (var client = new HttpClient())
                 {
                     string urlApi = _configuration["MovieFavorite"];
-                   
-                    
+
+
                     client.BaseAddress = new Uri(urlApi);
 
                     var responseTask = client.GetAsync("movies?api_key=4f6094a772c4c10e787eb59bf60f828e&session_id=0f0322e3459dbc569cba1b016e9b848b5c129783&language=es-ES&sort_by=created_at.asc&page=1");
@@ -111,11 +111,11 @@ namespace Movie.Controllers
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(_configuration["AddFavorite"]);
-                PL.Models.Favoritos favorito= new PL.Models.Favoritos();
+                PL.Models.Favoritos favorito = new PL.Models.Favoritos();
                 favorito.media_type = "movie";
                 favorito.media_id = idMovie.ToString();
                 favorito.favorite = true;
-                   
+
                 //HTTP POST
                 var postTask = client.PostAsJsonAsync("favorite?api_key=4f6094a772c4c10e787eb59bf60f828e&session_id=0f0322e3459dbc569cba1b016e9b848b5c129783", favorito);
                 postTask.Wait();
@@ -163,6 +163,25 @@ namespace Movie.Controllers
                 }
             }
             return null;
+        }
+
+        [HttpGet]
+        public ActionResult Login() { 
+        return View();
+        }
+        
+        [HttpPost]
+        public ActionResult Login(ML.Usuario usuario) { 
+        
+            ML.Result result=BL.Usuario.Login(usuario);
+            if (result.Correct)
+            {
+             return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return View();
+            }
         }
     }
 }

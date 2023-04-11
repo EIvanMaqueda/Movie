@@ -1,0 +1,68 @@
+﻿@model ML.Cine
+@{
+    ViewData["Title"] = "Cine";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    <div class="row">
+        <h2>Aseguradora</h2>
+        <br>
+        <h5>En este menu puedes agregar, actualizar y eliminar cines </h5>
+    </div>
+    <br />
+    <div class="row">
+        <div>
+            @Html.ActionLink("Agregar", "Form", "Cine", htmlAttributes: new { @class = "btn btn-success" })
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        @if (Model.Cines != null)
+        {
+            //tabla
+            <table class="table table-bordered table-responsive table-striped">
+                <thead style="background-color: chartreuse">
+                    <tr>
+                        <td class="d-none">IdCine</td>
+                        <td class="text-center" style=" font-weight:bold;">Latitud</td>
+                        <td class="text-center" style=" font-weight:bold;">Longitud</td>
+                        <td class="text-center" style=" font-weight:bold;">Descripcion</td>
+                        <td class="text-center" style=" font-weight:bold;">Venta</td>
+                        <td class="d-none">IdZona</td>
+                        <td class="text-center" style=" font-weight:bold;">Zona</td>
+                        <td class="text-center" style=" font-weight:bold;">Editar</td>
+                        <td class="text-center" style=" font-weight:bold;">Eliminar</td>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (ML.Cine cine in Model.Cines)
+                    {
+                        <tr>
+
+                            <td class="d-none">@cine.IdCine</td>
+                            <td>@cine.Latitud</td>
+                            <td>@cine.Longitud</td>
+                            <td>@cine.Descripcion</td>
+                            <td>@cine.Venta</td>
+                            <td class="d-none">@cine.Zona.IdZona</td>
+                            <td>@cine.Zona.Nombre</td>
+                            <td class="text-center"><a class="btn btn-warning" href="@Url.Action("Form", "Aseguradora", new { IdCine = cine.IdCine })"><i class="bi bi-pencil-square"></i></a></td>
+                            <td class="text-center"><a class="btn btn-danger" href="@Url.Action("Delete", "Aseguradora", new { IdCine = cine.IdCine})" onclick="return confirm('Estas seguro que deseas eliminar este registro?');"><i class="bi bi-trash-fill"></i></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+
+        }
+        else
+        {
+            <div class="alert alert-danger" role="alert">No hay cines para mostrar</div>
+        }
+    </div>
+</div>
+
+
+
+

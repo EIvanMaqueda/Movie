@@ -1,0 +1,89 @@
+﻿@model ML.Cine
+@{
+    ViewData["Title"] = "Form";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1>Formulario</h1>
+<br>
+<div class="row row-cols-6">
+    <div class="col">
+        <label  class="form-label">IdCine</label>
+        <input type="text" class="form-control" id="txtIdCine" name="IdCine" value="@Model.IdCine" disabled>
+    </div>
+    <div class="col">
+        <label  class="form-label">Latitud</label>
+        <input type="text" class="form-control" id="txtLatitud" name="Latitud" value="@Model.Latitud" disabled>
+    </div>
+    <div class="col">
+        <label class="form-label">Longitud</label>
+        <input type="text" class="form-control" id="txtLongitud" name="Longitud" value="@Model.Longitud" disabled>
+    </div>
+    <div class="col">
+        <label class="form-label">Descripcion</label>
+        <input type="text" class="form-control" id="txtDescripcion" name="Descripcion" value="@Model.Descripcion">
+    </div>
+    <div class="col">
+        <label class="form-label">Venta</label>
+        <input type="text" class="form-control" id="txtVenta" name="Venta" value="@Model.Venta">
+    </div> 
+    <div class="col">
+        <label class="form-label">Zona</label>
+        @Html.DropDownListFor(model => model.Zona.IdZona, new SelectList(Model.Zona.Zonas, "IdZona", "Nombre"), "Selecciona la Zona", new { @class = "form-control" })
+    </div>
+</div>
+<div id="map"></div>
+<script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCSKBDdPPlfca_zTwyxKiicRQn1qfgRjLw&callback=initMap">
+</script>
+
+<script src="~/js/map.js"></script>
+<script type="text/javascript">
+    function initMap() {
+        // The location of Uluru
+        var latit = document.getElementById("txtLatitud").value;
+        var long =document.getElementById("txtLongitud").value;
+        var uluru = { lat: 0, lng: 0 };
+        if(latit==""){
+           uluru = { lat: 19.430073, lng: -99.162189 };
+        }
+        else{
+            uluru = { lat: latit, lng: long };
+        }
+        
+
+        // The map, centered at Uluru
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 14,
+            center: uluru,
+        });
+        const infowindow = new google.maps.InfoWindow({
+            content: "Latitud: " + uluru.lat+"\nLongitud: "+uluru.lng,
+            position: uluru,
+        });
+        infowindow.open(map);
+
+        google.maps.event.addListener(map,'click',function(event){
+        var geo=new google.maps.Geocoder();
+        geo.geocode({
+                'address': inputAddress
+        },function(results,status){
+        if(status==google.maps.GeocoderStatus.OK){
+                    if (results[0]){
+                        document.getElementById("txtDescripcion").value(results[0].formatted_address);
+                    }
+        }
+        });
+        });
+        document.getElementById("txtLatitud").value=uluru.lat;
+        document.getElementById("txtLongitud").value = uluru.lng;
+        // The marker, positioned at Uluru
+        const marker = new google.maps.Marker({
+            position: uluru,
+            map: map,
+        });
+
+    }
+    window.initMap = initMap;
+</script>
+
+
