@@ -133,6 +133,7 @@ namespace BL
             }
             return result;
         }
+       
         public static ML.Result Delete(int IdCine) { 
         
             ML.Result result = new ML.Result();
@@ -155,6 +156,37 @@ namespace BL
                 result.Correct=false;
             }
             return result;
+        }
+
+        public static ML.Result Porcentajes() {
+            ML.Result result = new ML.Result();
+            try
+            {
+                using (DL.EmaquedaMovieContext context=new DL.EmaquedaMovieContext())
+                {
+                    var query = context.Cines.FromSqlRaw("Porcentajes").ToList();
+                    if (query!=null)
+                    {
+                        foreach (var obj in query)
+                        {
+                            ML.Porcentajes porcentajes = new ML.Porcentajes();
+                            porcentajes.Norte =double.Parse(obj.Latitud);
+                            porcentajes.Sur =double.Parse(obj.Longitud);
+                            porcentajes.Este =double.Parse(obj.Descripcion);
+                            porcentajes.Oeste = double.Parse(obj.Venta.ToString());
+
+                            result.Object = porcentajes;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return result;
+
         }
     }
 }

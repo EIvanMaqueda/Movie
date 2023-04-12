@@ -1,0 +1,88 @@
+﻿@model ML.Porcentajes
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row row-cols-2">
+	<div class="col-6">
+		<div class="graficoPastel" id="chartContainer"></div>
+	</div>
+    <div class="col-6">
+        <div class="Map" id="map1"></div>
+    </div>
+</div>
+
+
+@section Scripts{
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCSKBDdPPlfca_zTwyxKiicRQn1qfgRjLw&callback=initMap&libraries=&v=weekly&sensor=false" defer></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+<script type="text/javascript">
+	window.onload = function () {
+		Response.ContentType = "text/xml";
+		var options = {
+			title: {
+				text: "Grafico de Ventas"
+			},
+			subtitles: [{
+				text: "Cines"
+			}],
+			animationEnabled: true,
+			data: [{
+				type: "pie",
+				startAngle: 40,
+				toolTipContent: "<b>{label}</b>: {y}%",
+				showInLegend: "true",
+				legendText: "{label}",
+				indexLabelFontSize: 16,
+				indexLabel: "{label} - {y}%",
+				dataPoints: [
+					{ y:@Model.Norte, label: "Norte" },
+					{ y:@Model.Sur, label: "Sur" },
+					{ y:@Model.Este, label: "Este" },
+					{ y:@Model.Oeste, label: "Oeste" },
+				]
+			}]
+		};
+		$("#chartContainer").CanvasJSChart(options);
+
+	}
+        
+    function initMap() {
+        myLatlng = { lat: 19.430073, lng: -99.162189 };
+        const map = new google.maps.Map(document.getElementById("map1"), {
+                zoom: 11,
+                center: myLatlng,
+            });
+        @foreach (ML.Cine cine in Model.Cines)
+        {
+            <text>
+                                    var contentString = '<div id="content">' +
+                    '<div id="siteNotice">' +
+                    '</div>' +
+                    'Descripción: ' + '@cine.Descripcion' +
+                    '<div id="bodyContent">' +
+                    'Ventas:' + '@cine.Venta' + "<br>" +
+                    'Zona:' + '@cine.Zona.Nombre' + "<br>" +
+                    'ID:' + '@cine.IdCine' + "<br>" +
+                    '</div>' +
+                    '</div>';
+                var marker_@cine.IdCine = new google.maps.Marker({ position: { lat: @cine.Latitud, lng: @cine.Longitud }, map: map });
+                (marker_@cine.IdCine).addListener("click", function () {
+                    (infoWindow_@cine.IdCine).open(map, marker_@cine.IdCine);
+            });
+            var infoWindow_@cine.IdCine = new google.maps.InfoWindow({
+                content: contentString,
+                ariaLabel: "Punto de Venta",
+            });
+            </text>
+        }
+    }
+        window.initMap = initMap;
+           
+          
+        
+</script>
+}
